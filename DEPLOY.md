@@ -1,4 +1,4 @@
-# Deploying Dolphi — Step by Step Guide (No DevOps Required)
+# Deploying Dolphi — Step by Step Guide (No DevOps Required) 
 
 ## Overview
 
