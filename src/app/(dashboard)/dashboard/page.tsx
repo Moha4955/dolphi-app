@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { PlusCircle, Upload, Share2, Rocket } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 
+export const dynamic = 'force-dynamic';
+
 export default async function DashboardPage() {
   const supabase = createClient();
 
@@ -59,14 +61,8 @@ export default async function DashboardPage() {
           </p>
           <Link
             href="/campaigns/new"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white transition"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white transition hover:opacity-90"
             style={{ backgroundColor: '#00A896' }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor = '#00C4B0')
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.backgroundColor = '#00A896')
-            }
           >
             <PlusCircle size={20} />
             Create Campaign
