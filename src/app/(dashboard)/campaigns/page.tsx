@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { PlusCircle } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 
+export const dynamic = 'force-dynamic';
+
 export default async function CampaignsPage() {
   const supabase = createClient();
 
@@ -29,14 +31,8 @@ export default async function CampaignsPage() {
         </div>
         <Link
           href="/campaigns/new"
-          className="flex items-center gap-2 px-6 py-2 rounded-lg font-semibold text-white transition"
+          className="flex items-center gap-2 px-6 py-2 rounded-lg font-semibold text-white transition hover:opacity-90"
           style={{ backgroundColor: '#00A896' }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.backgroundColor = '#00C4B0')
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.backgroundColor = '#00A896')
-          }
         >
           <PlusCircle size={20} />
           New Campaign
@@ -165,14 +161,8 @@ export default async function CampaignsPage() {
           </p>
           <Link
             href="/campaigns/new"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white transition"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white transition hover:opacity-90"
             style={{ backgroundColor: '#00A896' }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor = '#00C4B0')
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.backgroundColor = '#00A896')
-            }
           >
             <PlusCircle size={20} />
             Create Campaign
