@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dolphi Marketing Suite — Australia</title>
+<style>
+  :root {
+    --ocean: #065A82;
+    --teal: #00A896;
+    --mint: #02C39A;
+    --dark: #0D2B3E;
+    --mid: #1C3A4A;
+    --light: #F0F9FC;
+    --white: #FFFFFF;
+    --grey: #64748B;
+    --lgrey: #E8F4F8;
+    --warn: #F59E0B;
+    --danger: #EF4444;
+    --success: #10B981;
+    --text: #1E293B;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Segoe UI',Arial,sans-serif; background:var(--light); color:var(--text); }
+  .hidden { display:none !important; }
+
+  /* ─── SIDEBAR ─── */
+  #sidebar {
+    position:fixed; left:0; top:0; bottom:0; width:240px;
+    background:var(--dark); display:flex; flex-direction:column;
+    z-index:100; transition:width .2s;
+  }
+  .logo-wrap { padding:22px 20px 18px; border-bottom:1px solid rgba(255,255,255,.08); }
+  .logo { display:flex; align-items:center; gap:10px; }
+  .logo-icon { width:36px; height:36px; background:var(--teal); border-radius:10px;
+    display:flex; align-items:center; justify-content:center; font-size:20px; }
+  .logo-text { color:#fff; font-size:18px; font-weight:700; letter-spacing:-.3px; }
+  .logo-sub { color:var(--teal); font-size:10px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; }
+
+  .nav { flex:1; padding:12px 0; overflow-y:auto; }
+  .nav-group { margin-bottom:6px; }
+  .nav-label { color:rgba(255,255,255,.35); font-size:10px; font-weight:700; letter-spacing:1.5px;
+    text-transform:uppercase; padding:10px 20px 4px; }
+  .nav-item { display:flex; align-items:center; gap:10px; padding:10px 20px;
+    color:rgba(255,255,255,.65); cursor:pointer; transition:all .15s;
+    border-left:3px solid transparent; font-size:14px; }
+  .nav-item:hover { background:rgba(255,255,255,.06); color:#fff; }
+  .nav-item.active { background:rgba(0,168,150,.15); color:var(--teal);
+    border-left-color:var(--teal); }
+  .nav-icon { font-size:16px; width:20px; text-align:center; }
+
+  .sidebar-footer { padding:16px 20px; border-top:1px solid rgba(255,255,255,.08); }
+  .user-chip { display:flex; align-items:center; gap:10px; }
+  .avatar { width:34px; height:34px; background:var(--teal); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:14px; }
+  .user-info .name { color:#fff; font-size:13px; font-weight:600; }
+  .user-info .plan { color:var(--teal); font-size:11px; }
+
+  /* ─── MAIN ─── */
+  #main { margin-left:240px; min-height:100vh; display:flex; flex-direction:column; }
+  .topbar { background:#fff; border-bottom:1px solid #E2EDF3; padding:0 28px;
+    height:60px; display:flex; align-items:center; justify-content:space-between;
+    position:sticky; top:0; z-index:50; }
+  .topbar-left h2 { font-size:18px; font-weight:700; color:var(--text); }
+  .topbar-left p { font-size:12px; color:var(--grey); margin-top:1px; }
+  .topbar-right { display:flex; align-items:center; gap:12px; }
+  .btn { display:inline-flex; align-items:center; gap:6px; padding:8px 16px;
+    border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;
+    border:none; transition:all .15s; text-decoration:none; }
+  .btn-primary { background:var(--teal); color:#fff; }
+  .btn-primary:hover { background:var(--ocean); }
+  .btn-outline { background:transparent; color:var(--ocean); border:1.5px solid var(--ocean); }
+  .btn-outline:hover { background:var(--ocean); color:#fff; }
+  .btn-ghost { background:transparent; color:var(--grey); border:1.5px solid #D1E8F0; }
+  .btn-ghost:hover { background:var(--lgrey); }
+  .btn-sm { padding:6px 12px; font-size:12px; }
+  .btn-danger { background:var(--danger); color:#fff; }
+
+  .notif-bell { position:relative; cursor:pointer; font-size:18px; color:var(--grey); }
+  .badge { position:absolute; top:-4px; right:-4px; background:var(--danger); color:#fff;
+    font-size:9px; font-weight:700; border-radius:99px; padding:1px 5px; }
+
+  .content { flex:1; padding:28px; }
+
+  /* ─── CARDS ─── */
+  .card { background:#fff; border-radius:14px; border:1px solid #E2EDF3; overflow:hidden; }
+  .card-pad { padding:24px; }
+  .card-header { padding:18px 24px; border-bottom:1px solid #E2EDF3;
+    display:flex; align-items:center; justify-content:space-between; }
+  .card-title { font-size:15px; font-weight:700; }
+  .card-sub { font-size:12px; color:var(--grey); margin-top:2px; }
+
+  /* ─── STAT CARDS ─── */
+  .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+  .stat-card { background:#fff; border-radius:14px; border:1px solid #E2EDF3; padding:20px 22px; }
+  .stat-label { font-size:12px; color:var(--grey); font-weight:600; text-transform:uppercase; letter-spacing:.5px; }
+  .stat-value { font-size:30px; font-weight:800; color:var(--text); margin:6px 0 4px; }
+  .stat-change { font-size:12px; font-weight:600; }
+  .stat-change.up { color:var(--success); }
+  .stat-change.down { color:var(--danger); }
+  .stat-icon { float:right; font-size:28px; opacity:.12; margin-top:-36px; }
+
+  /* ─── GRID LAYOUTS ─── */
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
+  .grid-7-3 { display:grid; grid-template-columns:7fr 3fr; gap:20px; }
+
+  /* ─── TABLES ─── */
+  table { width:100%; border-collapse:collapse; }
+  th { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px;
+    color:var(--grey); padding:10px 16px; text-align:left; background:#F7FBFD;
+    border-bottom:1px solid #E2EDF3; }
+  td { padding:12px 16px; font-size:13px; border-bottom:1px solid #F0F6F9; }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:#F7FBFD; }
+
+  /* ─── TAGS ─── */
+  .tag { display:inline-flex; align-items:center; gap:4px; padding:3px 10px;
+    border-radius:99px; font-size:11px; font-weight:700; }
+  .tag-green { background:#D1FAE5; color:#065F46; }
+  .tag-blue { background:#DBEAFE; color:#1E40AF; }
+  .tag-orange { background:#FEF3C7; color:#92400E; }
+  .tag-red { background:#FEE2E2; color:#991B1B; }
+  .tag-grey { background:#F1F5F9; color:#475569; }
+  .tag-teal { background:#CCFBF1; color:#065F46; }
+
+  /* ─── PROGRESS ─── */
+  .progress-bar { height:8px; border-radius:99px; background:#E2EDF3; overflow:hidden; }
+  .progress-fill { height:100%; border-radius:99px; background:var(--teal); transition:width .3s; }
+
+  /* ─── CHANNEL PILLS ─── */
+  .channel-pill { display:inline-flex; align-items:center; gap:5px; padding:4px 10px;
+    border-radius:99px; font-size:11px; font-weight:700; border:1.5px solid; }
+  .pill-seo { border-color:#6366F1; color:#6366F1; background:#EEF2FF; }
+  .pill-social { border-color:#EC4899; color:#EC4899; background:#FDF2F8; }
+  .pill-email { border-color:#F59E0B; color:#B45309; background:#FFFBEB; }
+  .pill-ads { border-color:#3B82F6; color:#1D4ED8; background:#EFF6FF; }
+
+  /* ─── TABS ─── */
+  .tabs { display:flex; gap:2px; border-bottom:2px solid #E2EDF3; margin-bottom:24px; }
+  .tab { padding:10px 18px; font-size:13px; font-weight:600; color:var(--grey);
+    cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all .15s; }
+  .tab:hover { color:var(--ocean); }
+  .tab.active { color:var(--teal); border-bottom-color:var(--teal); }
+
+  /* ─── FORM ELEMENTS ─── */
+  .form-group { margin-bottom:18px; }
+  .form-label { display:block; font-size:12px; font-weight:700; color:var(--text); margin-bottom:6px; }
+  .form-input, .form-select, .form-textarea {
+    width:100%; padding:10px 14px; border:1.5px solid #D1E8F0; border-radius:8px;
+    font-size:13px; color:var(--text); background:#fff; transition:border .15s; }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    outline:none; border-color:var(--teal); }
+  .form-textarea { resize:vertical; min-height:80px; }
+  .form-hint { font-size:11px; color:var(--grey); margin-top:4px; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .score-meter { display:flex; align-items:center; gap:10px; margin-top:8px; }
+  .score-dots { display:flex; gap:4px; }
+  .dot { width:10px; height:10px; border-radius:50%; background:#E2EDF3; }
+  .dot.filled { background:var(--teal); }
+  .dot.warn { background:var(--warn); }
+  .dot.bad { background:var(--danger); }
+
+  /* ─── LANDING PAGE VIEW ─── */
+  #view-landing { background:linear-gradient(135deg,var(--dark) 0%,#0A4A6E 60%,#065A82 100%);
+    min-height:100vh; display:flex; flex-direction:column; }
+  .lp-hero { text-align:center; padding:80px 40px 60px; }
+  .lp-badge { display:inline-block; background:rgba(0,168,150,.2); color:var(--teal);
+    padding:6px 18px; border-radius:99px; font-size:12px; font-weight:700;
+    letter-spacing:1px; text-transform:uppercase; margin-bottom:24px;
+    border:1px solid rgba(0,168,150,.3); }
+  .lp-headline { font-size:52px; font-weight:900; color:#fff; line-height:1.1; margin-bottom:20px; }
+  .lp-headline span { color:var(--teal); }
+  .lp-sub { font-size:18px; color:rgba(255,255,255,.7); max-width:560px; margin:0 auto 40px; line-height:1.6; }
+  .lp-cta-row { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+  .btn-lp { padding:14px 28px; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; border:none; transition:all .15s; }
+  .btn-lp-primary { background:var(--teal); color:#fff; }
+  .btn-lp-primary:hover { background:var(--mint); transform:translateY(-1px); }
+  .btn-lp-ghost { background:rgba(255,255,255,.1); color:#fff; border:1.5px solid rgba(255,255,255,.25); }
+  .lp-features { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; padding:0 40px 60px; }
+  .lp-feat { background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1);
+    border-radius:14px; padding:22px 20px; }
+  .lp-feat-icon { font-size:28px; margin-bottom:12px; }
+  .lp-feat h4 { color:#fff; font-size:14px; font-weight:700; margin-bottom:6px; }
+  .lp-feat p { color:rgba(255,255,255,.55); font-size:12px; line-height:1.5; }
+  .lp-optin { background:rgba(255,255,255,.05); border-top:1px solid rgba(255,255,255,.1);
+    padding:50px 40px; }
+  .optin-box { max-width:480px; margin:0 auto; text-align:center; }
+  .optin-box h3 { color:#fff; font-size:24px; font-weight:800; margin-bottom:8px; }
+  .optin-box p { color:rgba(255,255,255,.6); font-size:14px; margin-bottom:28px; }
+  .optin-form .field { margin-bottom:14px; }
+  .optin-form input { width:100%; padding:12px 16px; border-radius:10px;
+    border:1.5px solid rgba(255,255,255,.15); background:rgba(255,255,255,.08);
+    color:#fff; font-size:14px; }
+  .optin-form input::placeholder { color:rgba(255,255,255,.4); }
+  .optin-form input:focus { outline:none; border-color:var(--teal); }
+  .social-connect { display:flex; gap:10px; justify-content:center; margin-top:16px; flex-wrap:wrap; }
+  .social-btn { display:flex; align-items:center; gap:7px; padding:8px 16px;
+    border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; border:none; color:#fff; }
+  .social-btn.fb { background:#1877F2; }
+  .social-btn.ig { background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+  .social-btn.li { background:#0A66C2; }
+  .social-btn.tk { background:#000; }
+
+  /* ─── CAMPAIGN BUILDER ─── */
+  .builder-layout { display:grid; grid-template-columns:280px 1fr; gap:20px; min-height:500px; }
+  .builder-sidebar { background:#fff; border:1px solid #E2EDF3; border-radius:14px; overflow:hidden; }
+  .builder-sidebar-hd { padding:16px 18px; background:var(--dark); color:#fff; font-weight:700; font-size:14px; }
+  .builder-step { display:flex; align-items:center; gap:12px; padding:12px 18px;
+    border-bottom:1px solid #F0F6F9; cursor:pointer; transition:background .15s; }
+  .builder-step:hover { background:var(--lgrey); }
+  .builder-step.active { background:#EEF9F8; }
+  .step-num { width:26px; height:26px; border-radius:50%; background:#E2EDF3;
+    display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:var(--grey); flex-shrink:0; }
+  .step-num.done { background:var(--success); color:#fff; }
+  .step-num.current { background:var(--teal); color:#fff; }
+  .step-info .step-title { font-size:13px; font-weight:600; }
+  .step-info .step-desc { font-size:11px; color:var(--grey); }
+  .builder-canvas { background:#fff; border:1px solid #E2EDF3; border-radius:14px; padding:24px; }
+  .channel-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .channel-card { border:2px solid #E2EDF3; border-radius:12px; padding:18px;
+    cursor:pointer; transition:all .15s; }
+  .channel-card:hover { border-color:var(--teal); background:var(--lgrey); }
+  .channel-card.selected { border-color:var(--teal); background:#EEF9F8; }
+  .channel-card h4 { font-size:14px; font-weight:700; margin:8px 0 4px; }
+  .channel-card p { font-size:12px; color:var(--grey); }
+  .channel-card-icon { font-size:30px; }
+
+  /* ─── AI CONTENT BOX ─── */
+  .ai-box { background:linear-gradient(135deg,#EEF9F8,#E8F4FF); border:1.5px solid var(--teal);
+    border-radius:12px; padding:18px; margin-top:16px; }
+  .ai-box-header { display:flex; align-items:center; gap:8px; margin-bottom:12px; font-weight:700; font-size:13px; color:var(--ocean); }
+  .ai-generated { background:#fff; border-radius:8px; padding:14px; font-size:13px;
+    line-height:1.6; color:var(--text); border:1px solid #D1E8F0; }
+
+  /* ─── TRACKER ─── */
+  .kpi-row { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-bottom:24px; }
+  .kpi-box { background:#fff; border:1px solid #E2EDF3; border-radius:12px; padding:16px; text-align:center; }
+  .kpi-val { font-size:26px; font-weight:800; color:var(--ocean); }
+  .kpi-lbl { font-size:11px; color:var(--grey); font-weight:600; text-transform:uppercase; margin-top:4px; }
+  .kpi-delta { font-size:11px; font-weight:700; margin-top:4px; }
+
+  /* ─── MINI CHART (CSS-based) ─── */
+  .chart-wrap { padding:20px; }
+  .bar-chart { display:flex; align-items:flex-end; gap:8px; height:100px; }
+  .bar { flex:1; background:var(--teal); border-radius:4px 4px 0 0; opacity:.8;
+    transition:opacity .2s; cursor:pointer; position:relative; }
+  .bar:hover { opacity:1; }
+  .bar-label { text-align:center; font-size:10px; color:var(--grey); margin-top:6px; }
+  .chart-labels { display:flex; gap:8px; }
+  .chart-label { flex:1; text-align:center; font-size:10px; color:var(--grey); }
+  .line-chart { position:relative; height:80px; }
+  .line-chart svg { width:100%; height:100%; }
+
+  /* ─── BLOG BUILDER ─── */
+  .blog-editor { border:1.5px solid #D1E8F0; border-radius:10px; overflow:hidden; }
+  .blog-toolbar { background:#F7FBFD; padding:8px 12px; border-bottom:1px solid #D1E8F0;
+    display:flex; gap:6px; }
+  .blog-tool { padding:4px 8px; border-radius:5px; border:1px solid #D1E8F0;
+    background:#fff; font-size:11px; font-weight:700; cursor:pointer; color:var(--text); }
+  .blog-tool:hover { background:var(--lgrey); }
+  .blog-body { padding:16px; font-size:13px; line-height:1.7; color:var(--text); min-height:180px; }
+
+  /* ─── EMAIL BUILDER ─── */
+  .email-canvas { border:1px solid #D1E8F0; border-radius:10px; overflow:hidden; }
+  .email-header-bar { background:var(--ocean); padding:20px; text-align:center; color:#fff; }
+  .email-body-zone { padding:20px; background:#F9FAFB; }
+  .email-block { background:#fff; border:2px dashed #D1E8F0; border-radius:8px;
+    padding:14px; margin-bottom:12px; cursor:pointer; transition:border-color .15s; }
+  .email-block:hover { border-color:var(--teal); }
+  .email-block.selected { border-color:var(--teal); background:#EEF9F8; }
+  .email-footer-bar { background:#374151; padding:14px; text-align:center; color:rgba(255,255,255,.6); font-size:11px; }
+
+  /* ─── SOCIAL SCHEDULER ─── */
+  .platform-tabs { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+  .ptab { display:flex; align-items:center; gap:6px; padding:7px 14px;
+    border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;
+    border:1.5px solid #D1E8F0; background:#fff; color:var(--grey); transition:all .15s; }
+  .ptab.active { color:#fff; border-color:transparent; }
+  .ptab.fb.active { background:#1877F2; }
+  .ptab.ig.active { background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+  .ptab.li.active { background:#0A66C2; }
+  .ptab.tk.active { background:#000; }
+  .post-preview { background:#F9FAFB; border:1px solid #E2EDF3; border-radius:10px; padding:16px; }
+  .post-avatar { width:36px; height:36px; background:var(--teal); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; }
+  .post-header { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .post-name { font-size:13px; font-weight:700; }
+  .post-time { font-size:11px; color:var(--grey); }
+  .post-image-placeholder { height:140px; background:linear-gradient(135deg,var(--teal),var(--ocean));
+    border-radius:8px; display:flex; align-items:center; justify-content:center;
+    color:rgba(255,255,255,.5); font-size:13px; margin-bottom:10px; }
+
+  /* ─── SEO CHECKER ─── */
+  .seo-score-ring { width:80px; height:80px; border-radius:50%; display:flex;
+    align-items:center; justify-content:center; flex-direction:column;
+    border:5px solid var(--teal); font-size:22px; font-weight:800; color:var(--ocean); }
+  .seo-checks { margin-top:16px; }
+  .seo-check { display:flex; align-items:center; gap:10px; padding:10px 0;
+    border-bottom:1px solid #F0F6F9; font-size:13px; }
+  .check-icon { font-size:16px; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width:5px; }
+  ::-webkit-scrollbar-track { background:#F0F6F9; }
+  ::-webkit-scrollbar-thumb { background:#B0D4E3; border-radius:99px; }
+
+  /* Animations */
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  .view { animation:fadeIn .2s ease; }
+
+  /* Responsive tweaks */
+  @media(max-width:1100px) {
+    .stats-grid { grid-template-columns:repeat(2,1fr); }
+    .kpi-row { grid-template-columns:repeat(3,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     LANDING PAGE (shown first, before login)
+══════════════════════════════════════════════ -->
+<div id="view-landing" class="view">
+  <div class="lp-hero">
+    <div class="lp-badge">🇦🇺 Built for Australian Businesses</div>
+    <h1 class="lp-headline">Your Entire Marketing<br><span>Suite in One Place</span></h1>
+    <p class="lp-sub">Dolphi brings together SEO, social media, email campaigns, blogs, and paid ads — all powered by AI — so you can launch campaigns in minutes.</p>
+    <div class="lp-cta-row">
+      <button class="btn-lp btn-lp-primary" onclick="goToDashboard()">🚀 Start Free Trial</button>
+      <button class="btn-lp btn-lp-ghost" onclick="showOptIn()">📋 Get Early Access</button>
+    </div>
+  </div>
+
+  <div class="lp-features">
+    <div class="lp-feat">
+      <div class="lp-feat-icon">🔍</div>
+      <h4>SEO Optimisation</h4>
+      <p>Keyword tracking, on-page audits, meta tag builder and competitor analysis built right in.</p>
+    </div>
+    <div class="lp-feat">
+      <div class="lp-feat-icon">📱</div>
+      <h4>Social Media</h4>
+      <p>Schedule across Facebook, Instagram, LinkedIn and TikTok from a single drag-and-drop calendar.</p>
+    </div>
+    <div class="lp-feat">
+      <div class="lp-feat-icon">📧</div>
+      <h4>Email Marketing</h4>
+      <p>Drag-and-drop email builder with automation sequences, open tracking, and list segmentation.</p>
+    </div>
+    <div class="lp-feat">
+      <div class="lp-feat-icon">📝</div>
+      <h4>Blog & Content</h4>
+      <p>AI-assisted blog posts, embedded directly into your website with automatic SEO tagging.</p>
+    </div>
+  </div>
+
+  <!-- Opt-in form -->
+  <div class="lp-optin" id="optin-section">
+    <div class="optin-box">
+      <h3>Get Started Today</h3>
+      <p>Fill in your details, connect your socials, and launch your first campaign in under 10 minutes.</p>
+      <div class="optin-form">
+        <div class="field"><input type="text" placeholder="Business Name" /></div>
+        <div class="field"><input type="email" placeholder="Email Address" /></div>
+        <div class="field"><input type="tel" placeholder="Phone Number (AU)" /></div>
+        <div class="field"><input type="url" placeholder="Website URL" /></div>
+        <button class="btn-lp btn-lp-primary" style="width:100%;margin-top:4px" onclick="goToDashboard()">
+          Create My Account →
+        </button>
+      </div>
+      <p style="color:rgba(255,255,255,.4);font-size:11px;margin-top:16px">
+        Connect your socials after sign-up — it takes 30 seconds.
+      </p>
+      <div class="social-connect" style="margin-top:20px">
+        <div style="color:rgba(255,255,255,.4);font-size:12px;width:100%;margin-bottom:6px">Or connect directly:</div>
+        <button class="social-btn fb">📘 Facebook</button>
+        <button class="social-btn ig">📸 Instagram</button>
+        <button class="social-btn li">💼 LinkedIn</button>
+        <button class="social-btn tk">🎵 TikTok</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     APP SHELL (sidebar + main)
+══════════════════════════════════════════════ -->
+<div id="app-shell" class="hidden">
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <div class="logo-wrap">
+      <div class="logo">
+        <div class="logo-icon">🐬</div>
+        <div>
+          <div class="logo-text">Dolphi</div>
+          <div class="logo-sub">Marketing Suite</div>
+        </div>
+      </div>
+    </div>
+    <nav class="nav">
+      <div class="nav-group">
+        <div class="nav-label">Overview</div>
+        <div class="nav-item active" onclick="showView('dashboard')">
+          <span class="nav-icon">📊</span> Dashboard
+        </div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-label">Campaign</div>
+        <div class="nav-item" onclick="showView('builder')">
+          <span class="nav-icon">🛠</span> Campaign Builder
+        </div>
+        <div class="nav-item" onclick="showView('tracker')">
+          <span class="nav-icon">📈</span> Campaign Tracker
+        </div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-label">Channels</div>
+        <div class="nav-item" onclick="showView('seo')">
+          <span class="nav-icon">🔍</span> SEO Tools
+        </div>
+        <div class="nav-item" onclick="showView('social')">
+          <span class="nav-icon">📱</span> Social Media
+        </div>
+        <div class="nav-item" onclick="showView('email')">
+          <span class="nav-icon">📧</span> Email Marketing
+        </div>
+        <div class="nav-item" onclick="showView('blog')">
+          <span class="nav-icon">📝</span> Blog & Content
+        </div>
+        <div class="nav-item" onclick="showView('ads')">
+          <span class="nav-icon">💰</span> Paid Ads
+        </div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-label">Settings</div>
+        <div class="nav-item" onclick="showView('settings')">
+          <span class="nav-icon">⚙️</span> Settings
+        </div>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar">MA</div>
+        <div class="user-info">
+          <div class="name">My Business</div>
+          <div class="plan">⭐ Pro Plan</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content area -->
+  <div id="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <h2 id="page-title">Dashboard</h2>
+        <p id="page-sub">Welcome back — here's your marketing overview</p>
+      </div>
+      <div class="topbar-right">
+        <div class="notif-bell" title="Notifications">🔔<span class="badge">3</span></div>
+        <button class="btn btn-primary" onclick="showView('builder')">+ New Campaign</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ══ DASHBOARD ══ -->
+      <div id="view-dashboard" class="view">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Total Reach</div>
+            <div class="stat-value">84.2K</div>
+            <div class="stat-change up">▲ 12.4% this month</div>
+            <div class="stat-icon">🌐</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Leads Captured</div>
+            <div class="stat-value">342</div>
+            <div class="stat-change up">▲ 8.1% this month</div>
+            <div class="stat-icon">🎯</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Email Opens</div>
+            <div class="stat-value">61%</div>
+            <div class="stat-change up">▲ 3.2% avg rate</div>
+            <div class="stat-icon">📧</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Campaign ROI</div>
+            <div class="stat-value">4.8×</div>
+            <div class="stat-change down">▼ 0.3× vs last month</div>
+            <div class="stat-icon">💹</div>
+          </div>
+        </div>
+
+        <div class="grid-7-3" style="margin-bottom:20px">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Active Campaigns</div>
+                <div class="card-sub">All channels · Last 30 days</div>
+              </div>
+              <button class="btn btn-ghost btn-sm" onclick="showView('builder')">+ New</button>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Campaign</th>
+                  <th>Channels</th>
+                  <th>Reach</th>
+                  <th>Leads</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Summer Sale Push</strong><br><span style="font-size:11px;color:var(--grey)">Launched Mar 1</span></td>
+                  <td>
+                    <span class="channel-pill pill-social">📱 Social</span>
+                    <span class="channel-pill pill-email" style="margin-left:4px">📧 Email</span>
+                  </td>
+                  <td>32,400</td>
+                  <td>127</td>
+                  <td><span class="tag tag-green">Live</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Brand Awareness Q1</strong><br><span style="font-size:11px;color:var(--grey)">Launched Feb 14</span></td>
+                  <td>
+                    <span class="channel-pill pill-seo">🔍 SEO</span>
+                    <span class="channel-pill pill-ads" style="margin-left:4px">💰 Ads</span>
+                  </td>
+                  <td>51,800</td>
+                  <td>215</td>
+                  <td><span class="tag tag-green">Live</span></td>
+                </tr>
+                <tr>
+                  <td><strong>New Product Launch</strong><br><span style="font-size:11px;color:var(--grey)">Launching Mar 20</span></td>
+                  <td>
+                    <span class="channel-pill pill-social">📱 Social</span>
+                    <span class="channel-pill pill-seo" style="margin-left:4px">🔍 SEO</span>
+                    <span class="channel-pill pill-email" style="margin-left:4px">📧 Email</span>
+                  </td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="tag tag-orange">Scheduled</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div class="card card-pad">
+              <div class="card-title" style="margin-bottom:14px">Channel Mix</div>
+              <div style="margin-bottom:10px">
+                <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+                  <span>📱 Social Media</span><span style="font-weight:700">38%</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width:38%"></div></div>
+              </div>
+              <div style="margin-bottom:10px">
+                <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+                  <span>🔍 SEO / Blog</span><span style="font-weight:700">28%</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width:28%;background:#6366F1"></div></div>
+              </div>
+              <div style="margin-bottom:10px">
+                <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+                  <span>📧 Email</span><span style="font-weight:700">22%</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width:22%;background:#F59E0B"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+                  <span>💰 Paid Ads</span><span style="font-weight:700">12%</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width:12%;background:#3B82F6"></div></div>
+              </div>
+            </div>
+            <div class="card card-pad">
+              <div class="card-title" style="margin-bottom:12px">Upcoming</div>
+              <div style="font-size:12px;color:var(--grey);margin-bottom:8px">📅 Mar 18 — Email sequence #3</div>
+              <div style="font-size:12px;color:var(--grey);margin-bottom:8px">📅 Mar 20 — Product launch posts</div>
+              <div style="font-size:12px;color:var(--grey)">📅 Mar 25 — SEO audit report</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="card card-pad">
+            <div class="card-title" style="margin-bottom:4px">AI Recommendations</div>
+            <div style="font-size:11px;color:var(--grey);margin-bottom:14px">Based on your recent data</div>
+            <div style="background:#EEF9F8;border-radius:10px;padding:12px;margin-bottom:10px;font-size:13px;color:var(--ocean)">
+              💡 <strong>Your email open rate peaks on Tuesdays at 9am.</strong> Schedule your next campaign then.
+            </div>
+            <div style="background:#EFF6FF;border-radius:10px;padding:12px;font-size:13px;color:#1D4ED8">
+              💡 <strong>Add 3 more keywords to your SEO profile</strong> to capture an estimated 1,200 extra monthly searches.
+            </div>
+          </div>
+          <div class="card card-pad">
+            <div class="card-title" style="margin-bottom:14px">Social Performance</div>
+            <div style="display:flex;gap:12px">
+              <div style="text-align:center;flex:1">
+                <div style="font-size:20px;font-weight:800;color:#1877F2">4.2K</div>
+                <div style="font-size:11px;color:var(--grey)">Facebook Reach</div>
+              </div>
+              <div style="text-align:center;flex:1">
+                <div style="font-size:20px;font-weight:800;color:#E4405F">11.7K</div>
+                <div style="font-size:11px;color:var(--grey)">Instagram Reach</div>
+              </div>
+              <div style="text-align:center;flex:1">
+                <div style="font-size:20px;font-weight:800;color:#0A66C2">2.1K</div>
+                <div style="font-size:11px;color:var(--grey)">LinkedIn Views</div>
+              </div>
+            </div>
+          </div>
+          <div class="card card-pad">
+            <div class="card-title" style="margin-bottom:14px">SEO Health</div>
+            <div style="display:flex;align-items:center;gap:20px">
+              <div class="seo-score-ring">82<div style="font-size:10px;color:var(--grey)">/ 100</div></div>
+              <div style="flex:1">
+                <div style="font-size:12px;margin-bottom:6px">🟢 Title tags — OK</div>
+                <div style="font-size:12px;margin-bottom:6px">🟡 Meta descriptions — 3 missing</div>
+                <div style="font-size:12px">🟢 Page speed — 91ms</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ CAMPAIGN BUILDER ══ -->
+      <div id="view-builder" class="view hidden">
+        <div class="tabs" id="builder-tabs">
+          <div class="tab active" onclick="switchBuilderTab(0)">1. Choose Channels</div>
+          <div class="tab" onclick="switchBuilderTab(1)">2. Campaign Details</div>
+          <div class="tab" onclick="switchBuilderTab(2)">3. Create Content</div>
+          <div class="tab" onclick="switchBuilderTab(3)">4. Review & Deploy</div>
+        </div>
+
+        <!-- Step 0: Choose Channels -->
+        <div id="bstep-0">
+          <div class="card card-pad" style="margin-bottom:16px">
+            <div class="card-title" style="margin-bottom:4px">What channels do you want to run this campaign on?</div>
+            <div style="font-size:13px;color:var(--grey);margin-bottom:20px">Select all that apply — content will be created for each.</div>
+            <div class="channel-grid">
+              <div class="channel-card selected" onclick="toggleChannel(this)">
+                <div class="channel-card-icon">🔍</div>
+                <h4>SEO &amp; Blog</h4>
+                <p>Optimised blog post + keyword targeting + meta tags</p>
+              </div>
+              <div class="channel-card selected" onclick="toggleChannel(this)">
+                <div class="channel-card-icon">📱</div>
+                <h4>Social Media</h4>
+                <p>Scheduled posts for Facebook, Instagram, LinkedIn, TikTok</p>
+              </div>
+              <div class="channel-card selected" onclick="toggleChannel(this)">
+                <div class="channel-card-icon">📧</div>
+                <h4>Email Marketing</h4>
+                <p>Email sequence with subject lines, body, and CTA</p>
+              </div>
+              <div class="channel-card" onclick="toggleChannel(this)">
+                <div class="channel-card-icon">💰</div>
+                <h4>Paid Ads</h4>
+                <p>Google &amp; Meta ad copy + audience targeting + budget planning</p>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end">
+            <button class="btn btn-primary" onclick="switchBuilderTab(1)">Continue →</button>
+          </div>
+        </div>
+
+        <!-- Step 1: Campaign Details -->
+        <div id="bstep-1" class="hidden">
+          <div class="card card-pad" style="margin-bottom:16px">
+            <div class="card-title" style="margin-bottom:18px">Campaign Details</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Campaign Name</label>
+                <input class="form-input" type="text" value="Summer Sale Push 2" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Campaign Goal</label>
+                <select class="form-select">
+                  <option>Lead Generation</option>
+                  <option>Brand Awareness</option>
+                  <option>Product Launch</option>
+                  <option>Event Promotion</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Start Date</label>
+                <input class="form-input" type="date" value="2026-03-20" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">End Date</label>
+                <input class="form-input" type="date" value="2026-04-20" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Target Audience</label>
+              <input class="form-input" type="text" value="Australian homeowners aged 30–55, interested in home improvement" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Campaign Brief (AI uses this to generate all content)</label>
+              <textarea class="form-textarea" style="min-height:100px">We are running a summer sale with 30% off all products. Key message: limited time, great value. Tone: friendly and urgent. Include a strong CTA to visit the website.</textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Budget</label>
+                <input class="form-input" type="text" value="$2,000 AUD" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Primary Keyword (SEO)</label>
+                <input class="form-input" type="text" value="home improvement sale Australia" />
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between">
+            <button class="btn btn-ghost" onclick="switchBuilderTab(0)">← Back</button>
+            <button class="btn btn-primary" onclick="switchBuilderTab(2)">Generate Content →</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Create Content -->
+        <div id="bstep-2" class="hidden">
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-header">
+              <div>
+                <div class="card-title">AI-Generated Campaign Content</div>
+                <div class="card-sub">Review and edit each piece below — all generated from your brief</div>
+              </div>
+              <button class="btn btn-ghost btn-sm">🔄 Regenerate All</button>
+            </div>
+            <div class="card-pad">
+              <div class="tabs" style="margin-bottom:20px" id="content-tabs">
+                <div class="tab active" onclick="switchContentTab(0)">📱 Social Posts</div>
+                <div class="tab" onclick="switchContentTab(1)">📧 Email</div>
+                <div class="tab" onclick="switchContentTab(2)">📝 Blog Post</div>
+                <div class="tab" onclick="switchContentTab(3)">🔍 SEO Tags</div>
+              </div>
+
+              <!-- Social Posts content -->
+              <div id="ctab-0">
+                <div class="ai-box">
+                  <div class="ai-box-header">🤖 AI-Generated — Social Media Posts</div>
+                  <div style="margin-bottom:12px">
+                    <div style="font-size:12px;font-weight:700;margin-bottom:6px">📘 Facebook Post</div>
+                    <div class="ai-generated">🏠 BIG NEWS for Aussie homeowners! Our Summer Sale is HERE — save 30% on everything in-store and online. Whether you're renovating, refreshing or just starting out, now's the time to grab what you've been eyeing. 🌞
+<br><br>👉 Shop the sale → [your-website.com.au]
+<br><br>⏰ Sale ends April 20. Don't miss out! #SummerSale #HomeImprovement #AustralianMade</div>
+                    <div style="display:flex;gap:8px;margin-top:8px">
+                      <button class="btn btn-ghost btn-sm">✏️ Edit</button>
+                      <button class="btn btn-ghost btn-sm">🔄 Regenerate</button>
+                    </div>
+                  </div>
+                  <div style="margin-bottom:12px">
+                    <div style="font-size:12px;font-weight:700;margin-bottom:6px">📸 Instagram Caption</div>
+                    <div class="ai-generated">Summer just got sweeter ☀️ 30% off everything — for a limited time only. Tap the link in bio to shop now. 🛍️ #SummerSale #HomeGoals #AussieHomes #Renovation #HomeImprovement</div>
+                    <div style="display:flex;gap:8px;margin-top:8px">
+                      <button class="btn btn-ghost btn-sm">✏️ Edit</button>
+                      <button class="btn btn-ghost btn-sm">🔄 Regenerate</button>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="font-size:12px;font-weight:700;margin-bottom:6px">💼 LinkedIn Post</div>
+                    <div class="ai-generated">We're excited to announce our Summer Sale — 30% off across our entire product range. For home improvement professionals and trades businesses looking to stock up, this is the perfect opportunity. Sale runs until April 20. Visit [your-website.com.au] to browse the range.</div>
+                    <div style="display:flex;gap:8px;margin-top:8px">
+                      <button class="btn btn-ghost btn-sm">✏️ Edit</button>
+                      <button class="btn btn-ghost btn-sm">🔄 Regenerate</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Email content -->
+              <div id="ctab-1" class="hidden">
+                <div class="ai-box">
+                  <div class="ai-box-header">🤖 AI-Generated — Email Sequence (3 emails)</div>
+                  <div style="margin-bottom:12px">
+                    <div style="font-size:12px;font-weight:700;margin-bottom:4px">Email 1 — Launch (Day 0)</div>
+                    <div style="font-size:12px;color:var(--grey);margin-bottom:6px">Subject: 🌞 Our Summer Sale is LIVE — 30% off everything!</div>
+                    <div class="ai-generated">Hi [First Name],<br><br>Great news — our Summer Sale has officially launched! For the next 30 days, enjoy 30% off everything on our website and in-store.<br><br>Whether you've been planning a renovation, refreshing a room, or just looking for great value, now is the time.<br><br><strong>👉 [Shop the Sale Now]</strong><br><br>This offer ends April 20 — so don't wait!<br><br>Warm regards,<br>The Team</div>
+                  </div>
+                  <div style="margin-bottom:12px">
+                    <div style="font-size:12px;font-weight:700;margin-bottom:4px">Email 2 — Reminder (Day 10)</div>
+                    <div style="font-size:12px;color:var(--grey);margin-bottom:6px">Subject: ⏰ Last chance reminder — Summer Sale ends soon</div>
+                    <div class="ai-generated">Hi [First Name],<br><br>Just a quick reminder that our Summer Sale is still running — but not for long. You still have time to save 30% on everything.<br><br><strong>👉 [Browse the Sale]</strong></div>
+                  </div>
+                  <div>
+                    <div style="font-size:12px;font-weight:700;margin-bottom:4px">Email 3 — Last Day (Day 29)</div>
+                    <div style="font-size:12px;color:var(--grey);margin-bottom:6px">Subject: 🔴 TODAY ONLY — Final hours of our Summer Sale</div>
+                    <div class="ai-generated">Hi [First Name],<br><br>This is it — today is the last day of our Summer Sale. After midnight tonight, prices go back to normal. Don't miss out!<br><br><strong>👉 [Shop Now — Sale Ends Tonight]</strong></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Blog Post content -->
+              <div id="ctab-2" class="hidden">
+                <div class="ai-box">
+                  <div class="ai-box-header">🤖 AI-Generated — Blog Post (1,200 words)</div>
+                  <div class="ai-generated">
+                    <strong>10 Home Improvement Ideas to Tackle This Summer (+ How to Save 30% Right Now)</strong><br><br>
+                    <em>Published: March 20, 2026 · 6 min read · Tags: home improvement, summer sale, renovation tips</em><br><br>
+                    Summer is the perfect time to tackle those home improvement projects you've been putting off. Longer days, warmer weather, and — right now — a major sale make it the ideal moment to get started...<br><br>
+                    <strong>1. Refresh Your Living Room</strong><br>
+                    Starting with the most-used room in the house is always a smart move. A fresh coat of paint, new cushions, or updated light fixtures can completely transform a space...<br><br>
+                    <strong>2. Upgrade Your Outdoor Area</strong><br>
+                    Australians love outdoor living. Whether it's a new deck, better garden furniture, or outdoor lighting, this summer is a great time to invest in your alfresco space...
+                  </div>
+                  <div style="display:flex;gap:8px;margin-top:12px">
+                    <button class="btn btn-ghost btn-sm">✏️ Edit Full Post</button>
+                    <button class="btn btn-ghost btn-sm">🔄 Regenerate</button>
+                    <button class="btn btn-primary btn-sm">📤 Publish to Website</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SEO Tags -->
+              <div id="ctab-3" class="hidden">
+                <div class="ai-box">
+                  <div class="ai-box-header">🤖 AI-Generated — SEO Metadata</div>
+                  <div class="form-group">
+                    <label class="form-label">Page Title Tag (58 chars) <span class="tag tag-green" style="margin-left:6px">✓ Optimal</span></label>
+                    <input class="form-input" value="Home Improvement Sale Australia — 30% Off Everything" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Meta Description (158 chars) <span class="tag tag-green" style="margin-left:6px">✓ Optimal</span></label>
+                    <textarea class="form-textarea" style="min-height:60px">Shop our Summer Sale and save 30% on home improvement products across Australia. Limited time offer — browse online or in-store until April 20, 2026.</textarea>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Target Keywords</label>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap">
+                      <span class="tag tag-teal">home improvement sale australia</span>
+                      <span class="tag tag-teal">renovation deals australia</span>
+                      <span class="tag tag-teal">summer home sale 30% off</span>
+                      <span class="tag tag-blue">+ Add keyword</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">SEO Score</label>
+                    <div class="score-meter">
+                      <div class="score-dots">
+                        <div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div>
+                        <div class="dot filled"></div><div class="dot filled"></div>
+                        <div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div>
+                        <div class="dot"></div><div class="dot"></div>
+                      </div>
+                      <span style="font-weight:700;font-size:14px;color:var(--success)">8/10 — Strong</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between">
+            <button class="btn btn-ghost" onclick="switchBuilderTab(1)">← Back</button>
+            <button class="btn btn-primary" onclick="switchBuilderTab(3)">Review &amp; Deploy →</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Review & Deploy -->
+        <div id="bstep-3" class="hidden">
+          <div class="card card-pad" style="margin-bottom:16px">
+            <div class="card-title" style="margin-bottom:6px">📋 Campaign Summary</div>
+            <div style="font-size:13px;color:var(--grey);margin-bottom:20px">Review everything before launching.</div>
+            <div class="grid-2" style="margin-bottom:20px">
+              <div>
+                <div style="font-size:12px;font-weight:700;margin-bottom:6px">CAMPAIGN DETAILS</div>
+                <div style="font-size:13px;margin-bottom:4px"><span style="color:var(--grey)">Name:</span> Summer Sale Push 2</div>
+                <div style="font-size:13px;margin-bottom:4px"><span style="color:var(--grey)">Goal:</span> Lead Generation</div>
+                <div style="font-size:13px;margin-bottom:4px"><span style="color:var(--grey)">Dates:</span> Mar 20 – Apr 20, 2026</div>
+                <div style="font-size:13px"><span style="color:var(--grey)">Budget:</span> $2,000 AUD</div>
+              </div>
+              <div>
+                <div style="font-size:12px;font-weight:700;margin-bottom:6px">CHANNELS SELECTED</div>
+                <div style="margin-bottom:6px"><span class="channel-pill pill-social">📱 Social — 3 platforms</span></div>
+                <div style="margin-bottom:6px"><span class="channel-pill pill-email">📧 Email — 3-part sequence</span></div>
+                <div style="margin-bottom:6px"><span class="channel-pill pill-seo">🔍 SEO — 1 blog + meta tags</span></div>
+              </div>
+            </div>
+            <div style="background:#D1FAE5;border-radius:10px;padding:16px;margin-bottom:16px">
+              <div style="font-weight:700;color:#065F46;margin-bottom:4px">✅ All content generated and ready</div>
+              <div style="font-size:13px;color:#065F46">3 social posts · 3 emails · 1 blog post · SEO meta tags</div>
+            </div>
+            <div style="display:flex;gap:12px">
+              <button class="btn btn-primary" style="flex:1;justify-content:center;padding:14px" onclick="alert('🚀 Campaign launched! Redirecting to tracker...');showView(\'tracker\')">
+                🚀 Launch Campaign Now
+              </button>
+              <button class="btn btn-ghost" style="padding:14px 20px">Schedule for Later</button>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-start">
+            <button class="btn btn-ghost" onclick="switchBuilderTab(2)">← Back</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ TRACKER ══ -->
+      <div id="view-tracker" class="view hidden">
+        <div class="kpi-row">
+          <div class="kpi-box"><div class="kpi-val">84.2K</div><div class="kpi-lbl">Total Reach</div><div class="kpi-delta" style="color:var(--success)">▲ 12%</div></div>
+          <div class="kpi-box"><div class="kpi-val">6,240</div><div class="kpi-lbl">Clicks</div><div class="kpi-delta" style="color:var(--success)">▲ 8%</div></div>
+          <div class="kpi-box"><div class="kpi-val">342</div><div class="kpi-lbl">Leads</div><div class="kpi-delta" style="color:var(--success)">▲ 15%</div></div>
+          <div class="kpi-box"><div class="kpi-val">61%</div><div class="kpi-lbl">Email Open Rate</div><div class="kpi-delta" style="color:var(--danger)">▼ 2%</div></div>
+          <div class="kpi-box"><div class="kpi-val">4.8×</div><div class="kpi-lbl">Overall ROI</div><div class="kpi-delta" style="color:var(--success)">▲ 0.4×</div></div>
+        </div>
+        <div class="grid-7-3" style="margin-bottom:20px">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Reach Over Time</div></div>
+            <div class="chart-wrap">
+              <div class="bar-chart">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1">
+                  <div class="bar" style="height:40px;background:#6366F1"></div>
+                  <div class="bar-label">Mar 1</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1">
+                  <div class="bar" style="height:52px;background:#6366F1"></div>
+                  <div class="bar-label">Mar 5</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1">
+                  <div class="bar" style="height:65px;background:var(--teal)"></div>
+                  <div class="bar-label">Mar 8</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1">
+                  <div class="bar" style="height:58px;background:var(--teal)"></div>
+                  <div class="bar-label">Mar 11</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1">
+                  <div class="bar" style="height:78px;background:var(--teal)"></div>
+                  <div class="bar-label">Mar 14</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1">
+                  <div class="bar" style="height:95px;background:var(--ocean)"></div>
+                  <div class="bar-label">Mar 16</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card card-pad">
+            <div class="card-title" style="margin-bottom:14px">Campaign Health</div>
+            <div style="margin-bottom:12px">
+              <div style="font-size:12px;margin-bottom:4px">📱 Social — <strong>On track</strong></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:72%"></div></div>
+            </div>
+            <div style="margin-bottom:12px">
+              <div style="font-size:12px;margin-bottom:4px">📧 Email — <strong>Exceeding</strong></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:90%;background:var(--success)"></div></div>
+            </div>
+            <div>
+              <div style="font-size:12px;margin-bottom:4px">🔍 SEO — <strong>Building</strong></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:35%;background:var(--warn)"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Campaign Performance Breakdown</div></div>
+          <table>
+            <thead>
+              <tr>
+                <th>Campaign</th><th>Channel</th><th>Reach</th><th>CTR</th><th>Leads</th><th>Cost / Lead</th><th>ROI</th><th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Summer Sale Push</strong></td>
+                <td><span class="channel-pill pill-social">📱 Social</span></td>
+                <td>32,400</td><td>4.2%</td><td>87</td><td>$4.20</td><td>5.1×</td>
+                <td><span class="tag tag-green">Live</span></td>
+              </tr>
+              <tr>
+                <td><strong>Summer Sale Push</strong></td>
+                <td><span class="channel-pill pill-email">📧 Email</span></td>
+                <td>2,800</td><td>61% open</td><td>40</td><td>$1.80</td><td>8.4×</td>
+                <td><span class="tag tag-green">Live</span></td>
+              </tr>
+              <tr>
+                <td><strong>Brand Awareness Q1</strong></td>
+                <td><span class="channel-pill pill-seo">🔍 SEO</span></td>
+                <td>28,600</td><td>3.1%</td><td>115</td><td>$0.60</td><td>12.2×</td>
+                <td><span class="tag tag-green">Live</span></td>
+              </tr>
+              <tr>
+                <td><strong>Brand Awareness Q1</strong></td>
+                <td><span class="channel-pill pill-ads">💰 Ads</span></td>
+                <td>23,200</td><td>2.8%</td><td>100</td><td>$8.50</td><td>2.8×</td>
+                <td><span class="tag tag-green">Live</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ══ SEO TOOLS ══ -->
+      <div id="view-seo" class="view hidden">
+        <div class="grid-2" style="margin-bottom:20px">
+          <div class="card card-pad">
+            <div class="card-title" style="margin-bottom:16px">🔍 Keyword Research</div>
+            <div class="form-group">
+              <label class="form-label">Enter a keyword or topic</label>
+              <div style="display:flex;gap:8px">
+                <input class="form-input" type="text" value="home improvement australia" style="flex:1" />
+                <button class="btn btn-primary">Analyse</button>
+              </div>
+            </div>
+            <table style="margin-top:8px">
+              <thead><tr><th>Keyword</th><th>Volume</th><th>Difficulty</th><th>Opportunity</th></tr></thead>
+              <tbody>
+                <tr><td>home improvement australia</td><td>18,000</td><td><span class="tag tag-orange">Medium</span></td><td><span class="tag tag-green">High</span></td></tr>
+                <tr><td>renovation ideas australia</td><td>12,500</td><td><span class="tag tag-green">Low</span></td><td><span class="tag tag-green">High</span></td></tr>
+                <tr><td>buy home improvement products</td><td>8,200</td><td><span class="tag tag-red">High</span></td><td><span class="tag tag-orange">Medium</span></td></tr>
+                <tr><td>DIY renovation australia</td><td>6,800</td><td><span class="tag tag-green">Low</span></td><td><span class="tag tag-green">High</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card card-pad">
+            <div class="card-title" style="margin-bottom:16px">📊 On-Page SEO Audit</div>
+            <div style="display:flex;align-items:center;gap:20px;margin-bottom:20px">
+              <div class="seo-score-ring" style="width:90px;height:90px;font-size:26px">82<div style="font-size:10px;color:var(--grey)">/ 100</div></div>
+              <div>
+                <div style="font-size:22px;font-weight:800;color:var(--success)">Good</div>
+                <div style="font-size:13px;color:var(--grey)">3 issues to fix</div>
+              </div>
+            </div>
+            <div class="seo-checks">
+              <div class="seo-check"><span class="check-icon">✅</span> Title tags present on all pages</div>
+              <div class="seo-check"><span class="check-icon">⚠️</span> 3 pages missing meta descriptions</div>
+              <div class="seo-check"><span class="check-icon">✅</span> Page speed: 91ms avg</div>
+              <div class="seo-check"><span class="check-icon">✅</span> Mobile responsive</div>
+              <div class="seo-check"><span class="check-icon">⚠️</span> Alt text missing on 7 images</div>
+              <div class="seo-check"><span class="check-icon">✅</span> Schema markup: present</div>
+            </div>
+          </div>
+        </div>
+        <div class="card card-pad">
+          <div class="card-title" style="margin-bottom:14px">🏆 Keyword Rankings</div>
+          <table>
+            <thead><tr><th>Keyword</th><th>Current Rank</th><th>Last Month</th><th>Change</th><th>URL</th></tr></thead>
+            <tbody>
+              <tr><td>home improvement sale australia</td><td><strong>#4</strong></td><td>#8</td><td><span class="stat-change up">▲ 4</span></td><td style="color:var(--teal)">/summer-sale</td></tr>
+              <tr><td>renovation deals australia</td><td><strong>#11</strong></td><td>#14</td><td><span class="stat-change up">▲ 3</span></td><td style="color:var(--teal)">/deals</td></tr>
+              <tr><td>DIY home products</td><td><strong>#7</strong></td><td>#7</td><td><span class="stat-change">—</span></td><td style="color:var(--teal)">/products</td></tr>
+              <tr><td>buy home improvement online</td><td><strong>#19</strong></td><td>#22</td><td><span class="stat-change up">▲ 3</span></td><td style="color:var(--teal)">/shop</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ══ SOCIAL MEDIA ══ -->
+      <div id="view-social" class="view hidden">
+        <div class="grid-2" style="margin-bottom:20px">
+          <div class="card card-pad">
+            <div class="card-title" style="margin-bottom:14px">📅 Schedule a Post</div>
+            <div class="platform-tabs">
+              <div class="ptab fb active" onclick="selectPlatform(this,'fb')">📘 Facebook</div>
+              <div class="ptab ig" onclick="selectPlatform(this,'ig')">📸 Instagram</div>
+              <div class="ptab li" onclick="selectPlatform(this,'li')">💼 LinkedIn</div>
+              <div class="ptab tk" onclick="selectPlatform(this,'tk')">🎵 TikTok</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Post Caption</label>
+              <textarea class="form-textarea" style="min-height:120px">🏠 BIG NEWS for Aussie homeowners! Our Summer Sale is HERE — save 30% on everything. Don't miss out! 👉 [link] #SummerSale #HomeImprovement</textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Schedule Date</label>
+                <input class="form-input" type="date" value="2026-03-20" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Schedule Time</label>
+                <input class="form-input" type="time" value="09:00" />
+              </div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-primary" style="flex:1">📅 Schedule Post</button>
+              <button class="btn btn-ghost">Post Now</button>
+            </div>
+          </div>
+          <div class="card card-pad">
+            <div class="card-title" style="margin-bottom:14px">👁 Post Preview</div>
+            <div class="post-preview">
+              <div class="post-header">
+                <div class="post-avatar">MB</div>
+                <div>
+                  <div class="post-name">My Business</div>
+                  <div class="post-time">📅 Scheduled: Mar 20 at 9:00am · 📘 Facebook</div>
+                </div>
+              </div>
+              <div class="post-image-placeholder">📷 Image / Video will appear here</div>
+              <div style="font-size:13px;line-height:1.6">🏠 BIG NEWS for Aussie homeowners! Our Summer Sale is HERE — save 30% on everything. Don't miss out! 👉 [link] <span style="color:#1877F2">#SummerSale #HomeImprovement</span></div>
+              <div style="display:flex;gap:16px;margin-top:10px;font-size:12px;color:var(--grey)">
+                <span>👍 Like</span><span>💬 Comment</span><span>↗️ Share</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Upcoming Scheduled Posts</div></div>
+          <table>
+            <thead><tr><th>Post</th><th>Platform</th><th>Scheduled</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              <tr><td>🌞 Summer Sale launch post</td><td><span class="tag tag-blue">Facebook</span></td><td>Mar 20, 9:00am</td><td><span class="tag tag-orange">Scheduled</span></td><td><button class="btn btn-ghost btn-sm">Edit</button></td></tr>
+              <tr><td>🛍️ Instagram sale visual</td><td><span class="tag tag-red">Instagram</span></td><td>Mar 20, 10:30am</td><td><span class="tag tag-orange">Scheduled</span></td><td><button class="btn btn-ghost btn-sm">Edit</button></td></tr>
+              <tr><td>💼 LinkedIn announcement</td><td><span class="tag tag-blue">LinkedIn</span></td><td>Mar 20, 11:00am</td><td><span class="tag tag-orange">Scheduled</span></td><td><button class="btn btn-ghost btn-sm">Edit</button></td></tr>
+              <tr><td>📸 Mid-sale reminder</td><td><span class="tag tag-red">Instagram</span></td><td>Apr 5, 9:00am</td><td><span class="tag tag-grey">Draft</span></td><td><button class="btn btn-ghost btn-sm">Edit</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ══ EMAIL MARKETING ══ -->
+      <div id="view-email" class="view hidden">
+        <div class="grid-7-3" style="margin-bottom:20px">
+          <div class="card card-pad">
+            <div class="card-title" style="margin-bottom:6px">📧 Email Builder</div>
+            <div style="font-size:12px;color:var(--grey);margin-bottom:16px">Drag blocks to build your email</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Subject Line</label>
+                <input class="form-input" value="🌞 Our Summer Sale is LIVE — 30% off everything!" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Preview Text</label>
+                <input class="form-input" value="Limited time only — shop now before it's too late" />
+              </div>
+            </div>
+            <div class="email-canvas">
+              <div class="email-header-bar">
+                <div style="font-size:22px;font-weight:800">🌞 Summer Sale is LIVE</div>
+                <div style="font-size:14px;opacity:.8;margin-top:4px">30% off everything — for a limited time</div>
+              </div>
+              <div class="email-body-zone">
+                <div class="email-block selected">
+                  <div style="font-size:13px;font-weight:700;margin-bottom:4px">📝 Text Block</div>
+                  <div style="font-size:12px;color:var(--grey)">Hi [First Name], Great news — our Summer Sale has launched! Click below to shop...</div>
+                </div>
+                <div class="email-block" onclick="this.classList.toggle('selected')">
+                  <div style="font-size:13px;font-weight:700;margin-bottom:4px">🖼 Image Block</div>
+                  <div style="height:60px;background:#E2EDF3;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--grey)">Drop or upload image</div>
+                </div>
+                <div class="email-block" onclick="this.classList.toggle('selected')" style="text-align:center">
+                  <div style="font-size:13px;font-weight:700;margin-bottom:8px">🔘 Button Block</div>
+                  <div style="background:var(--teal);color:#fff;padding:10px 24px;border-radius:8px;display:inline-block;font-weight:700;font-size:13px">Shop the Sale →</div>
+                </div>
+              </div>
+              <div class="email-footer-bar">Unsubscribe · Privacy Policy · My Business, Australia</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="card card-pad">
+              <div class="card-title" style="margin-bottom:12px">Audience</div>
+              <div class="form-group">
+                <label class="form-label">Send To</label>
+                <select class="form-select">
+                  <option>All Subscribers (2,840)</option>
+                  <option>Leads — Last 30 Days</option>
+                  <option>Customers — Purchased</option>
+                </select>
+              </div>
+              <div style="font-size:12px;color:var(--grey)">Est. 2,840 recipients</div>
+            </div>
+            <div class="card card-pad">
+              <div class="card-title" style="margin-bottom:12px">Send Options</div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Date</label>
+                  <input class="form-input" type="date" value="2026-03-20" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Time</label>
+                  <input class="form-input" type="time" value="09:00" />
+                </div>
+              </div>
+              <button class="btn btn-primary" style="width:100%">📤 Schedule Email</button>
+            </div>
+            <div class="card card-pad">
+              <div class="card-title" style="margin-bottom:10px">Last Campaign Stats</div>
+              <div style="font-size:13px;margin-bottom:6px">Open rate: <strong style="color:var(--success)">61%</strong></div>
+              <div style="font-size:13px;margin-bottom:6px">Click rate: <strong>18.4%</strong></div>
+              <div style="font-size:13px">Unsubscribes: <strong style="color:var(--danger)">12</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ BLOG & CONTENT ══ -->
+      <div id="view-blog" class="view hidden">
+        <div class="grid-2" style="margin-bottom:20px">
+          <div class="card card-pad">
+            <div class="card-title" style="margin-bottom:14px">✍️ AI Blog Generator</div>
+            <div class="form-group">
+              <label class="form-label">Blog Topic</label>
+              <input class="form-input" value="10 Home Improvement Ideas for Summer 2026" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Target Keyword</label>
+                <input class="form-input" value="home improvement australia" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Word Count</label>
+                <select class="form-select">
+                  <option>800 words</option>
+                  <option selected>1,200 words</option>
+                  <option>1,800 words</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tone</label>
+              <select class="form-select">
+                <option>Friendly & Informative</option>
+                <option>Professional</option>
+                <option>Casual & Fun</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" style="width:100%">🤖 Generate Blog Post</button>
+          </div>
+          <div class="card card-pad">
+            <div class="card-title" style="margin-bottom:12px">Published Posts</div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="border:1px solid #E2EDF3;border-radius:10px;padding:12px">
+                <div style="font-size:13px;font-weight:700">10 Home Renovation Trends for 2026</div>
+                <div style="font-size:11px;color:var(--grey);margin:4px 0">Published Feb 28 · 1,450 views</div>
+                <div style="display:flex;gap:6px">
+                  <span class="tag tag-green">Published</span>
+                  <span class="tag tag-teal">SEO: 9/10</span>
+                </div>
+              </div>
+              <div style="border:1px solid #E2EDF3;border-radius:10px;padding:12px">
+                <div style="font-size:13px;font-weight:700">How to Choose the Right Paint Colour</div>
+                <div style="font-size:11px;color:var(--grey);margin:4px 0">Published Feb 14 · 820 views</div>
+                <div style="display:flex;gap:6px">
+                  <span class="tag tag-green">Published</span>
+                  <span class="tag tag-teal">SEO: 8/10</span>
+                </div>
+              </div>
+              <div style="border:1px solid #E2EDF3;border-radius:10px;padding:12px">
+                <div style="font-size:13px;font-weight:700">10 Home Improvement Ideas — Summer</div>
+                <div style="font-size:11px;color:var(--grey);margin:4px 0">Draft · Not published yet</div>
+                <div style="display:flex;gap:6px">
+                  <span class="tag tag-grey">Draft</span>
+                  <button class="btn btn-primary btn-sm" style="margin-left:auto">Publish</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Blog Editor</div></div>
+          <div class="card-pad">
+            <div class="blog-editor">
+              <div class="blog-toolbar">
+                <button class="blog-tool"><b>B</b></button>
+                <button class="blog-tool"><i>I</i></button>
+                <button class="blog-tool">H1</button>
+                <button class="blog-tool">H2</button>
+                <button class="blog-tool">📋 List</button>
+                <button class="blog-tool">🔗 Link</button>
+                <button class="blog-tool">🖼 Image</button>
+                <button class="blog-tool">📊 Table</button>
+              </div>
+              <div class="blog-body" contenteditable="true">
+                <h2 style="font-size:18px;font-weight:800;margin-bottom:8px">10 Home Improvement Ideas to Tackle This Summer</h2>
+                <p style="color:var(--grey);font-size:12px;margin-bottom:14px">Published: March 20, 2026 · Tags: home improvement, summer sale, renovation tips</p>
+                <p>Summer is the perfect time to tackle those home improvement projects you've been putting off. Longer days, warmer weather, and — right now — a major sale make it the ideal moment to get started...</p>
+                <p style="margin-top:12px"><strong>1. Refresh Your Living Room</strong><br>Starting with the most-used room in the house is always a smart move. A fresh coat of paint, new cushions, or updated light fixtures can completely transform a space...</p>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:12px">
+              <button class="btn btn-primary">📤 Publish to Website</button>
+              <button class="btn btn-ghost">💾 Save Draft</button>
+              <button class="btn btn-ghost btn-sm" style="margin-left:auto">🔍 SEO Check</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PAID ADS ══ -->
+      <div id="view-ads" class="view hidden">
+        <div class="grid-2" style="margin-bottom:20px">
+          <div class="card card-pad">
+            <div class="card-title" style="margin-bottom:14px">💰 New Ad Campaign</div>
+            <div class="form-group">
+              <label class="form-label">Platform</label>
+              <select class="form-select">
+                <option>Google Search Ads</option>
+                <option>Meta (Facebook + Instagram)</option>
+                <option>Google Display</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Campaign Objective</label>
+              <select class="form-select">
+                <option>Lead Generation</option>
+                <option>Traffic / Clicks</option>
+                <option>Brand Awareness</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Daily Budget (AUD)</label>
+                <input class="form-input" type="number" value="65" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Duration (days)</label>
+                <input class="form-input" type="number" value="30" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">AI-Generated Ad Copy</label>
+              <div class="ai-box" style="margin-top:0">
+                <div style="font-size:12px;font-weight:700;margin-bottom:4px">Headline 1</div>
+                <div class="ai-generated" style="margin-bottom:8px">Save 30% on Home Improvement Products</div>
+                <div style="font-size:12px;font-weight:700;margin-bottom:4px">Headline 2</div>
+                <div class="ai-generated" style="margin-bottom:8px">Summer Sale — Shop Australian Made</div>
+                <div style="font-size:12px;font-weight:700;margin-bottom:4px">Description</div>
+                <div class="ai-generated">Limited time sale — 30% off all home improvement products. Shop online or in-store across Australia. Offer ends April 20.</div>
+              </div>
+            </div>
+            <button class="btn btn-primary" style="width:100%">🚀 Launch Ad Campaign</button>
+          </div>
+          <div class="card card-pad">
+            <div class="card-title" style="margin-bottom:14px">📊 Active Ad Performance</div>
+            <div style="margin-bottom:16px">
+              <div style="font-size:12px;font-weight:700;color:var(--grey);margin-bottom:8px">GOOGLE SEARCH ADS</div>
+              <div class="grid-2">
+                <div style="text-align:center;background:#F7FBFD;border-radius:8px;padding:10px">
+                  <div style="font-size:20px;font-weight:800;color:var(--ocean)">$840</div>
+                  <div style="font-size:11px;color:var(--grey)">Spend</div>
+                </div>
+                <div style="text-align:center;background:#F7FBFD;border-radius:8px;padding:10px">
+                  <div style="font-size:20px;font-weight:800;color:var(--success)">$8.40</div>
+                  <div style="font-size:11px;color:var(--grey)">Cost / Lead</div>
+                </div>
+                <div style="text-align:center;background:#F7FBFD;border-radius:8px;padding:10px">
+                  <div style="font-size:20px;font-weight:800;color:var(--ocean)">4.2%</div>
+                  <div style="font-size:11px;color:var(--grey)">CTR</div>
+                </div>
+                <div style="text-align:center;background:#F7FBFD;border-radius:8px;padding:10px">
+                  <div style="font-size:20px;font-weight:800;color:var(--success)">2.8×</div>
+                  <div style="font-size:11px;color:var(--grey)">ROAS</div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--grey);margin-bottom:8px">META ADS</div>
+              <div class="grid-2">
+                <div style="text-align:center;background:#F7FBFD;border-radius:8px;padding:10px">
+                  <div style="font-size:20px;font-weight:800;color:var(--ocean)">$680</div>
+                  <div style="font-size:11px;color:var(--grey)">Spend</div>
+                </div>
+                <div style="text-align:center;background:#F7FBFD;border-radius:8px;padding:10px">
+                  <div style="font-size:20px;font-weight:800;color:var(--success)">$5.60</div>
+                  <div style="font-size:11px;color:var(--grey)">Cost / Lead</div>
+                </div>
+                <div style="text-align:center;background:#F7FBFD;border-radius:8px;padding:10px">
+                  <div style="font-size:20px;font-weight:800;color:var(--ocean)">3.8%</div>
+                  <div style="font-size:11px;color:var(--grey)">CTR</div>
+                </div>
+                <div style="text-align:center;background:#F7FBFD;border-radius:8px;padding:10px">
+                  <div style="font-size:20px;font-weight:800;color:var(--success)">3.4×</div>
+                  <div style="font-size:11px;color:var(--grey)">ROAS</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ SETTINGS ══ -->
+      <div id="view-settings" class="view hidden">
+        <div class="grid-2">
+          <div class="card card-pad">
+            <div class="card-title" style="margin-bottom:18px">🏢 Business Profile</div>
+            <div class="form-group"><label class="form-label">Business Name</label><input class="form-input" value="My Business Pty Ltd" /></div>
+            <div class="form-group"><label class="form-label">Website</label><input class="form-input" value="https://mybusiness.com.au" /></div>
+            <div class="form-group"><label class="form-label">Industry</label><select class="form-select"><option>Home Improvement</option><option>Retail</option><option>Services</option></select></div>
+            <div class="form-group"><label class="form-label">Location</label><input class="form-input" value="Sydney, NSW, Australia" /></div>
+            <button class="btn btn-primary">Save Profile</button>
+          </div>
+          <div class="card card-pad">
+            <div class="card-title" style="margin-bottom:18px">🔗 Connected Accounts</div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:#F7FBFD;border-radius:10px">
+                <div style="display:flex;align-items:center;gap:10px"><span style="font-size:20px">📘</span><strong style="font-size:13px">Facebook</strong></div>
+                <span class="tag tag-green">✓ Connected</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:#F7FBFD;border-radius:10px">
+                <div style="display:flex;align-items:center;gap:10px"><span style="font-size:20px">📸</span><strong style="font-size:13px">Instagram</strong></div>
+                <span class="tag tag-green">✓ Connected</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:#F7FBFD;border-radius:10px">
+                <div style="display:flex;align-items:center;gap:10px"><span style="font-size:20px">💼</span><strong style="font-size:13px">LinkedIn</strong></div>
+                <span class="tag tag-orange">Connect</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:#F7FBFD;border-radius:10px">
+                <div style="display:flex;align-items:center;gap:10px"><span style="font-size:20px">🎵</span><strong style="font-size:13px">TikTok</strong></div>
+                <span class="tag tag-orange">Connect</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:#F7FBFD;border-radius:10px">
+                <div style="display:flex;align-items:center;gap:10px"><span style="font-size:20px">🔍</span><strong style="font-size:13px">Google Analytics</strong></div>
+                <span class="tag tag-green">✓ Connected</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app-shell -->
+
+<script>
+const pages = {
+  dashboard: { title: 'Dashboard', sub: 'Welcome back — here\'s your marketing overview' },
+  builder:   { title: 'Campaign Builder', sub: 'Create and deploy campaigns across all channels' },
+  tracker:   { title: 'Campaign Tracker', sub: 'Live performance data across all active campaigns' },
+  seo:       { title: 'SEO Tools', sub: 'Keyword research, rankings and on-page audits' },
+  social:    { title: 'Social Media', sub: 'Schedule and manage posts across all platforms' },
+  email:     { title: 'Email Marketing', sub: 'Build, schedule and track email campaigns' },
+  blog:      { title: 'Blog & Content', sub: 'AI-assisted blog posts optimised for SEO' },
+  ads:       { title: 'Paid Ads', sub: 'Google and Meta ad creation and performance' },
+  settings:  { title: 'Settings', sub: 'Business profile and connected accounts' },
+};
+
+function showView(name) {
+  document.querySelectorAll('#main .view').forEach(v => v.classList.add('hidden'));
+  document.getElementById('view-' + name).classList.remove('hidden');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach(n => { if (n.textContent.trim().toLowerCase().includes(name === 'dashboard' ? 'dashboard' : pages[name]?.title.split(' ')[0].toLowerCase())) n.classList.add('active'); });
+  document.getElementById('page-title').textContent = pages[name]?.title || name;
+  document.getElementById('page-sub').textContent = pages[name]?.sub || '';
+}
+
+function goToDashboard() {
+  document.getElementById('view-landing').classList.add('hidden');
+  document.getElementById('app-shell').classList.remove('hidden');
+  showView('dashboard');
+}
+
+function showOptIn() {
+  document.getElementById('optin-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+function toggleChannel(el) {
+  el.classList.toggle('selected');
+}
+
+function switchBuilderTab(idx) {
+  const tabs = document.querySelectorAll('#builder-tabs .tab');
+  tabs.forEach((t, i) => t.classList.toggle('active', i === idx));
+  for (let i = 0; i < 4; i++) {
+    const el = document.getElementById('bstep-' + i);
+    if (el) el.classList.toggle('hidden', i !== idx);
+  }
+}
+
+function switchContentTab(idx) {
+  const tabs = document.querySelectorAll('#content-tabs .tab');
+  tabs.forEach((t, i) => t.classList.toggle('active', i === idx));
+  ['ctab-0','ctab-1','ctab-2','ctab-3'].forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('hidden', i !== idx);
+  });
+}
+
+function selectPlatform(el, cls) {
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// Wire up nav clicks properly
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', function() {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
